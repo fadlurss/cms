@@ -1,0 +1,29 @@
+<% include ../../layouts/admin/header %>  
+<div class="container">
+    <h1 class="">All Posts Page</h1>  
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Allow Comments</th>
+                <th>Body</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+         <% result_posts.forEach(function(hasil){ %>
+            <tr>
+                <td><%= hasil.id %></td>
+                <td><%= hasil.title %></td>
+                <td><%= hasil.status%> </td>
+                <td><%= hasil.allowComments %></td>
+                <td><%= hasil.body%></td>
+                <td><a href="/admin/posts/edit/<%= hasil.id %>" class="btn btn-info btn-sm">Edit</a> | <a href="" class="btn btn-danger btn-sm">Delete</a></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+<% include ../../layouts/admin/footer %>  
