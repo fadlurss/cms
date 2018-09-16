@@ -1,6 +1,7 @@
 var express    = require('express');
     router     = express.Router();
     Posts      = require('../../models/posts');
+    
 
 
     router.get('/', (req,res)=>{
@@ -43,6 +44,44 @@ var express    = require('express');
             }
         });
     }); 
+
+    router.put('/edit/:id', (req,res)=>{
+        if(req.body.allowComments){ 
+            allowComments = true;
+        } else {
+            allowComments = false;
+        } 
+
+        var title = req.body.title;
+        var status = req.body.status;
+        var allowComments = allowComments;
+        var body = req.body.body;
+        
+        var updatePosts = {title : title, status : status, allowComments : allowComments, body : body};
+        Posts.findByIdAndUpdate(req.params.id, updatePosts, function(err, update_posts){
+            console.log("HASILNYA "+update_posts);
+            if(err){
+                res.redirect("/admin/posts");
+                console.log(err);
+            } else {
+                res.redirect("/admin/posts");
+                
+            }
+        });
+    });
+
+    router.delete("/:id", (req, res)=>{
+        Posts.findByIdAndRemove(req.params.id, function(err){
+            if(err){
+                res.redirect("/admin/posts");
+            } else {
+                res.redirect("/admin/posts");
+            }
+        });
+    });
+
+
+    
 
 
 module.exports = router; 
