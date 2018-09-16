@@ -1,7 +1,8 @@
 var express    = require('express');
     router     = express.Router();
     Posts      = require('../../models/posts');
-    
+    fs         = require('fs');
+var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
 
 
     router.get('/', (req,res)=>{
@@ -15,9 +16,24 @@ var express    = require('express');
     });
 
     router.post("/create", (req,res)=>{
-        var allowComments = '';
 
-        if(allowComments){ 
+        if(!isEmpty(req.files)){
+            var file = req.files.file;
+            var filename = Date.now() + '-' + file.name;
+            file.mv('./public/uploads/' + filename, (err)=>{
+                if(err){
+                    console.log(err);
+                }
+            });
+            console.log('is not empty');
+        } else {
+            console.log('is empty');
+        }
+
+        
+        var allowComments = true;
+
+        if(req.body.allowComments){ 
             allowComments = true;
         } else {
             allowComments = false;
@@ -27,7 +43,8 @@ var express    = require('express');
             title: req.body.title,
             status: req.body.status,
             allowComments: allowComments,
-            body: req.body.body
+            body: req.body.body,
+            file: filename
        });
 
        newPosts.save();
@@ -71,12 +88,18 @@ var express    = require('express');
     });
 
     router.delete("/:id", (req, res)=>{
-        Posts.findByIdAndRemove(req.params.id, function(err){
-            if(err){
-                res.redirect("/admin/posts");
-            } else {
-                res.redirect("/admin/posts");
-            }
+        // Posts.findOne(req.params.id, function(err, post){
+           
+        //         fs.unlink(uploadDir + post.file, (err)=>{
+        //             post.remove();
+        //             res.redirect("/admin/posts");
+        //         });
+
+        Posts.findOne({_id: req.params.id}).then( post=>{
+                fs.unlink(uploadDir + post.file, (err)=>{
+                    post.remove();
+                    res.redirect("/admin/posts");
+                });
         });
     });
 
