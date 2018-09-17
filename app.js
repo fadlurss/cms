@@ -8,10 +8,11 @@ var express                 = require('express');
     session                 = require('express-session');
     flash                   = require('connect-flash');
     upload                  = require('express-fileupload');
+    moment                  = require('moment');
     home                    = require('./routes/home/index');
     admin                   = require('./routes/admin/index'); 
     posts                   = require('./routes/admin/posts'); 
-    select                  = require('./helpers/dynamic_select');
+var {select, generateTime}  = require('./helpers/dynamic_select');
 // mongoose.Promise = global.Promise;
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.use(express.static(__dirname + "/public")); 
@@ -26,8 +27,10 @@ app.use(session({
     saveUninitialized : true
 }));
 app.use(flash());
+
 app.use((req,res,next)=>{
     res.locals.success = req.flash('success');
+    app.locals.moment = require('moment');
     next();
 });
 app.use('/', home);

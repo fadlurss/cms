@@ -2,6 +2,7 @@ var express    = require('express');
     router     = express.Router();
     Posts      = require('../../models/posts');
     fs         = require('fs');
+    
 var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
 
 
