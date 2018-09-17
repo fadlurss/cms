@@ -16,39 +16,58 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
     });
 
     router.post("/create", (req,res)=>{
+        var errors   = [];
+        if(!req.body.title){
+            errors.push({message: 'please add a title'});
+        }
 
-        if(!isEmpty(req.files)){
-            var file = req.files.file;
-            var filename = Date.now() + '-' + file.name;
-            file.mv('./public/uploads/' + filename, (err)=>{
-                if(err){
-                    console.log(err);
-                }
-            });
-            console.log('is not empty');
+        if(!req.body.status){
+            errors.push({message: 'please add a status'});
+        }
+
+        if(!req.body.body){
+            errors.push({message: 'please add a body'});
+        }
+
+        if(errors.length > 0 ){
+            res.render('admin/posts/create', {erros: errors});
         } else {
-            console.log('is empty');
+
+            if(!isEmpty(req.files)){
+                var file = req.files.file;
+                var filename = Date.now() + '-' + file.name;
+                file.mv('./public/uploads/' + filename, (err)=>{
+                    if(err){
+                        console.log(err);
+                    }
+                });
+                console.log('is not empty');
+            } else {
+                console.log('is empty');
+            }
+    
+            
+            var allowComments = true;
+    
+            if(req.body.allowComments){ 
+                allowComments = true;
+            } else {
+                allowComments = false;
+            } 
+    
+           var newPosts = new Posts({
+                title: req.body.title,
+                status: req.body.status,
+                allowComments: allowComments,
+                body: req.body.body,
+                file: filename
+           });
+    
+           newPosts.save();
+           res.redirect("/admin/posts");
         }
 
         
-        var allowComments = true;
-
-        if(req.body.allowComments){ 
-            allowComments = true;
-        } else {
-            allowComments = false;
-        } 
-
-       var newPosts = new Posts({
-            title: req.body.title,
-            status: req.body.status,
-            allowComments: allowComments,
-            body: req.body.body,
-            file: filename
-       });
-
-       newPosts.save();
-       res.redirect("/admin/posts");
     });
 
     router.get("/edit/:id", (req,res)=>{
