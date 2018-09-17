@@ -64,6 +64,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
            });
     
            newPosts.save();
+           req.flash('success', `Post ${req.body.title} was created succesfully`);
            res.redirect("/admin/posts");
         }
 
@@ -92,14 +93,30 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
         var status = req.body.status;
         var allowComments = allowComments;
         var body = req.body.body;
+
+        if(!isEmpty(req.files)){
+            var file = req.files.file;
+            var filename = Date.now() + '-' + file.name;
+            var input_file = filename; //to db
+            file.mv('./public/uploads/' + filename, (err)=>{
+                if(err){
+                    console.log(err);
+                }
+            });
+            console.log('is not empty');
+        } else {
+            console.log('is empty');
+        }
+
         
-        var updatePosts = {title : title, status : status, allowComments : allowComments, body : body};
+        var updatePosts = {title : title, status : status, allowComments : allowComments, body : body, file: input_file};
         Posts.findByIdAndUpdate(req.params.id, updatePosts, function(err, update_posts){
-            console.log("HASILNYA "+update_posts);
+            // console.log("HASILNYA "+update_posts);
             if(err){
                 res.redirect("/admin/posts");
                 console.log(err);
             } else {
+                req.flash('success', `Post ${req.body.title} was succesfully updated`);
                 res.redirect("/admin/posts");
                 
             }
@@ -117,6 +134,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
         Posts.findOne({_id: req.params.id}).then( post=>{
                 fs.unlink(uploadDir + post.file, (err)=>{
                     post.remove();
+                    req.flash('success', 'Post was successfully deleted');
                     res.redirect("/admin/posts");
                 });
         });

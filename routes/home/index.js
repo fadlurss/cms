@@ -3,6 +3,10 @@ var express    = require('express');
 
 router.get("/", ((req,res)=>{
     res.render("v_home");
+    // req.session.test  = 'Test 1';
+    // if(req.session.test){
+    //     console.log(`We found ${req.session.test}`);
+    // }
 }));
 
 router.get("/about", ((req,res)=>{

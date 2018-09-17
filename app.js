@@ -5,6 +5,8 @@ var express                 = require('express');
     bodyParser              = require('body-parser');
     methodOverride          = require('method-override');
     expressLayouts          = require('express-ejs-layouts');
+    session                 = require('express-session');
+    flash                   = require('connect-flash');
     upload                  = require('express-fileupload');
     home                    = require('./routes/home/index');
     admin                   = require('./routes/admin/index'); 
@@ -18,6 +20,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride("_method"));
 app.use(upload());
+app.use(session({
+    secret : "dfnjvn3245",
+    resave : true,
+    saveUninitialized : true
+}));
+app.use(flash());
+app.use((req,res,next)=>{
+    res.locals.success = req.flash('success');
+    next();
+});
 app.use('/', home);
 app.use('/admin', admin);
 app.use('/admin/posts', posts);
