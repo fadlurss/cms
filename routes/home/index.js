@@ -1,8 +1,13 @@
 var express    = require('express');
-    router = express.Router();
+    router     = express.Router();
+    Posts      = require('../../models/posts');
 
 router.get("/", ((req,res)=>{
-    res.render("v_home");
+    
+    Posts.find({}, (err, posts)=>{
+        res.render("v_home", {posts : posts});
+    });
+
     // req.session.test  = 'Test 1';
     // if(req.session.test){
     //     console.log(`We found ${req.session.test}`);
@@ -20,6 +25,12 @@ router.get("/login", ((req,res)=>{
 router.get("/register", ((req,res)=>{
     res.render("v_home/register");
 }));
+
+router.get("/posts/:id", (req,res)=>{
+    Posts.findById(req.params.id, (err, posts)=>{
+        res.render("v_home/post", {posts: posts});
+    });
+});
 
 
 
