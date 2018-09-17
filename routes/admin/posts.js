@@ -31,7 +31,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
         }
 
         if(errors.length > 0 ){
-            res.render('admin/posts/create', {erros: errors});
+            res.render('admin/posts/create', {errors: errors}); 
         } else {
 
             if(!isEmpty(req.files)){
