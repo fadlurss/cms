@@ -2,9 +2,10 @@ var express    = require('express');
     router = express.Router();
 var faker = require('faker');
 var Categories = require('../../models/categories');
+var {userAuthenticated} = require('../../helpers/auth');
 
 
-router.get("/", (req,res)=>{
+router.get("/",userAuthenticated, (req,res)=>{
     Categories.find({}, (err, categories)=>{
         res.render("v_admin/categories/index", {categories: categories});
     });

@@ -23,4 +23,8 @@ var UsersSchema = new Schema ({
     }
 });
 
+UsersSchema.methods.testMethod = function(){
+    console.log('using schema method');
+}
+
 module.exports = mongoose.model('users', UsersSchema);

@@ -3,24 +3,25 @@ var express    = require('express');
     Posts      = require('../../models/posts');
     Categories = require('../../models/categories');
     fs         = require('fs');
+var {userAuthenticated} = require('../../helpers/auth');
     
 var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
 
 
-    router.get('/', (req,res)=>{
+    router.get('/',userAuthenticated, (req,res)=>{
         Posts.find({}).populate("categories").exec(function(err, result_posts){
             res.render('v_admin/posts', {result_posts : result_posts});
         });
     });
 
-    router.get("/create", (req,res)=>{
+    router.get("/create",userAuthenticated, (req,res)=>{
         Categories.find({}, (err, categories)=>{
             res.render("v_admin/posts/create", {categories: categories});
         });
         
     });
 
-    router.post("/create", (req,res)=>{
+    router.post("/create",userAuthenticated, (req,res)=>{
         var errors   = [];
         if(!req.body.title){
             errors.push({message: 'please add a title'});

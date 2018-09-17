@@ -2,9 +2,10 @@ var express    = require('express');
     router = express.Router();
     faker       = require('faker');
     Posts       = require('../../models/posts');
+    var {userAuthenticated} = require('../../helpers/auth');
 
 
-    router.get('/', (req,res)=>{
+    router.get('/', userAuthenticated, (req,res)=>{
         res.render('v_admin/index');
     });
 
