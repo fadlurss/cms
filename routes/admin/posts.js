@@ -1,19 +1,23 @@
 var express    = require('express');
     router     = express.Router();
     Posts      = require('../../models/posts');
+    Categories = require('../../models/categories');
     fs         = require('fs');
     
 var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
 
 
     router.get('/', (req,res)=>{
-        Posts.find({}, (err, result_posts)=>{
+        Posts.find({}).populate("categories").exec(function(err, result_posts){
             res.render('v_admin/posts', {result_posts : result_posts});
         });
     });
 
     router.get("/create", (req,res)=>{
-        res.render("v_admin/posts/create");
+        Categories.find({}, (err, categories)=>{
+            res.render("v_admin/posts/create", {categories: categories});
+        });
+        
     });
 
     router.post("/create", (req,res)=>{
@@ -60,6 +64,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
                 title: req.body.title,
                 status: req.body.status,
                 allowComments: allowComments,
+                categories : req.body.categories,
                 body: req.body.body,
                 file: filename
            });
@@ -78,7 +83,9 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
                 res.redirect("/admin/posts");
                 console.log(err);
             } else {
-                res.render("v_admin/posts/edit", {edit_posts: edit_posts});
+                Categories.find({}, (err,categories)=>{
+                    res.render("v_admin/posts/edit", {edit_posts: edit_posts, categories:categories});
+                });
             }
         });
     }); 
@@ -94,6 +101,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
         var status = req.body.status;
         var allowComments = allowComments;
         var body = req.body.body;
+        var categories = req.body.categories;
 
         if(!isEmpty(req.files)){
             var file = req.files.file;
@@ -110,7 +118,7 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
         }
 
         
-        var updatePosts = {title : title, status : status, allowComments : allowComments, body : body, file: input_file};
+        var updatePosts = {title : title, categories: categories , status : status, allowComments : allowComments, body : body, file: input_file};
         Posts.findByIdAndUpdate(req.params.id, updatePosts, function(err, update_posts){
             // console.log("HASILNYA "+update_posts);
             if(err){
@@ -125,13 +133,6 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
     });
 
     router.delete("/:id", (req, res)=>{
-        // Posts.findOne(req.params.id, function(err, post){
-           
-        //         fs.unlink(uploadDir + post.file, (err)=>{
-        //             post.remove();
-        //             res.redirect("/admin/posts");
-        //         });
-
         Posts.findOne({_id: req.params.id}).then( post=>{
                 fs.unlink(uploadDir + post.file, (err)=>{
                     post.remove();

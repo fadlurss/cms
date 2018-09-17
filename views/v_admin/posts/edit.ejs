@@ -11,13 +11,21 @@
                         <input type="file" name="file" class="form-control">
                 </div>
                 <div class="form-group">
+                        <label for="">Category</label>
+                        <select name="categories" id="" class="form-control" id="">
+                            <% categories.forEach(function(hasil){ %>
+                                <option value="<%= hasil.id %>"><%= hasil.name %></option>
+                            <% }); %>
+                        </select>
+                </div>
+                <div class="form-group">
                         <label for="">Status</label>
                         <select name="status" id="status" class="form-control" id="">
                             <option value="public">public</option>
                             <option value="private">private</option>
                             <option value="draft">draft</option>
                         </select>
-                    </div>
+                </div>
                 <div class="form-check-label">
                     <label for="">
                         <input type="checkbox" value="<%= edit_posts.allowComments %>" name="allowComments" class="form-check-input" id="allowComments" <% if(edit_posts.allowComments ) { %> checked="checked" <% }; %> placeholder="">

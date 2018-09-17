@@ -8,6 +8,7 @@
                 <th>Id</th>
                 <th>Title</th>
                 <th>Image</th>
+                <th>Category</th>
                 <th>Status</th>
                 <th>Allow Comments</th>
                 <th>Body</th>
@@ -19,8 +20,9 @@
          <% result_posts.forEach(function(hasil){ %>
             <tr>
                 <td><%= hasil.id %></td>
-                <td><img class="img-responsive" src="/uploads/<%= hasil.file %>" height="50"></td>
                 <td><%= hasil.title %></td>
+                <td><img class="img-responsive" src="/uploads/<%= hasil.file %>" height="50"></td>
+                <td><%= hasil.categories.name %></td>
                 <td><%= hasil.status%> </td>
                 <td><%= hasil.allowComments %></td>
                 <td><%= hasil.body%></td>

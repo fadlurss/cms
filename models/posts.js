@@ -26,6 +26,11 @@ var PostsSchema = new Schema ({
     date: {
         type: Date,
         default: Date.now()
+    },
+
+    categories : {
+        type: Schema.Types.ObjectId,
+        ref: 'categories'
     }
 });
 
