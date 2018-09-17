@@ -52,6 +52,12 @@
       </div>
     </nav>
 
+    
     <!-- Page Content -->
     <div class="container">
-        
+        <% success.forEach(function(success) { %>
+          <div class="alert alert-info"><%= success %> </div>
+        <% }); %> 
+        <% error.forEach(function(error) { %>
+          <div class="alert alert-danger"><%= error.message %> </div>
+        <% }); %> 
