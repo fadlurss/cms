@@ -5,7 +5,7 @@ var express    = require('express');
     var {userAuthenticated} = require('../../helpers/auth');
 
 
-    router.get('/', userAuthenticated, (req,res)=>{
+    router.get('/', (req,res)=>{
         res.render('v_admin/index');
     });
 

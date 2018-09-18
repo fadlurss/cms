@@ -15,6 +15,7 @@ var express                 = require('express');
     admin                   = require('./routes/admin/index'); 
     posts                   = require('./routes/admin/posts'); 
     categories              = require('./routes/admin/categories'); 
+    comments                = require('./routes/admin/comments'); 
 var {select, generateTime}  = require('./helpers/dynamic_select');
 // mongoose.Promise = global.Promise;
 app.set('view engine', 'ejs'); // set up ejs for templating
@@ -43,6 +44,7 @@ app.use('/', home);
 app.use('/admin', admin);
 app.use('/admin/posts', posts);
 app.use('/admin/categories', categories);
+app.use('/admin/comments', comments);
 
 app.listen(3000, ()=> {
     console.log('Server cms has started!');

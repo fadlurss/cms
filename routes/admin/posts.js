@@ -8,20 +8,20 @@ var {userAuthenticated} = require('../../helpers/auth');
 var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
 
 
-    router.get('/',userAuthenticated, (req,res)=>{
+    router.get('/', (req,res)=>{
         Posts.find({}).populate("categories").exec(function(err, result_posts){
             res.render('v_admin/posts', {result_posts : result_posts});
         });
     });
 
-    router.get("/create",userAuthenticated, (req,res)=>{
+    router.get("/create", (req,res)=>{
         Categories.find({}, (err, categories)=>{
             res.render("v_admin/posts/create", {categories: categories});
         });
         
     });
 
-    router.post("/create",userAuthenticated, (req,res)=>{
+    router.post("/create", (req,res)=>{
         var errors   = [];
         if(!req.body.title){
             errors.push({message: 'please add a title'});
@@ -134,11 +134,22 @@ var {isEmpty, uploadDir}  = require('../../helpers/upload-helpers');
     });
 
     router.delete("/:id", (req, res)=>{
-        Posts.findOne({_id: req.params.id}).then( post=>{
+        Posts.findOne({_id: req.params.id}).populate('comments').then( post=>{
                 fs.unlink(uploadDir + post.file, (err)=>{
+                    // post.remove();
+                    // req.flash('success', 'Post was successfully deleted');
+                    // res.redirect("/admin/posts");
+                    // console.log(post.comments);
+
+                    if(!post.comments.length <1) {
+                        post.comments.forEach(function(comment){
+                            comment.remove();
+                        });
+                    }
+
                     post.remove();
-                    req.flash('success', 'Post was successfully deleted');
                     res.redirect("/admin/posts");
+                       
                 });
         });
     });

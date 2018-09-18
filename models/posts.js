@@ -31,7 +31,14 @@ var PostsSchema = new Schema ({
     categories : {
         type: Schema.Types.ObjectId,
         ref: 'categories'
-    }
+    },
+
+    comments : [
+        {
+            type: Schema.Types.ObjectId,
+            ref : 'comments'
+        }
+    ]
 });
 
 module.exports = mongoose.model('posts', PostsSchema);

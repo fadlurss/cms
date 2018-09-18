@@ -5,7 +5,7 @@ var Categories = require('../../models/categories');
 var {userAuthenticated} = require('../../helpers/auth');
 
 
-router.get("/",userAuthenticated, (req,res)=>{
+router.get("/", (req,res)=>{
     Categories.find({}, (err, categories)=>{
         res.render("v_admin/categories/index", {categories: categories});
     });
